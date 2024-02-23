@@ -2,6 +2,7 @@ A. Dependency
 >torch<br>
 >pykeops<br>
 >numpy<br>
+>sklearn<br>
 
 B. Preparation for proteins
 >1.Download the .pdb file locally<br>
