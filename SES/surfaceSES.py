@@ -215,7 +215,8 @@ def createSurface(atomscoor,atomtypes_protein,batch=None,sup_sampling=5,smoothne
     #find the normal vector for each surface point
     nor_vector=normalVector(remainPoints,atoms_SAS,smoothness=smoothness)
     shape_index=curvatures(remainPoints, scales=scales, batch=batch, normals=nor_vector, reg=reg)
-
+    shape_index3=curvatures(remainPoints, scales=[3.0], batch=batch, normals=nor_vector, reg=reg)  
+    
     candidate_index=(shape_index<threshold).nonzero().squeeze()
     # calcualte the oreented_nor_vector
       
@@ -224,6 +225,5 @@ def createSurface(atomscoor,atomtypes_protein,batch=None,sup_sampling=5,smoothne
     c=torch.mul(nor_vector[:,2], shape_index)
     oriented_nor_vector=torch.cat((a.view(shape_index.shape[0],1), b.view(shape_index.shape[0],1), c.view(shape_index.shape[0],1)), 1)
 
-
-    return remainPoints,candidate_index,shape_index,oriented_nor_vector
+    return remainPoints,candidate_index,shape_index,oriented_nor_vector,shape_index3
 
