@@ -11,3 +11,4 @@ B. Preparation for proteins
 
 C.Protein surface generation and feature calculation.
 >4.Run checkUnknownAA.py to check if there are any unknow AA.If yes, edit them into the dictionary.py.Else to the next step. This is important to generate the SES<br>
+>5.RUn SESFeature2CSV.py to generate SES and assign features to each surface points<br>
