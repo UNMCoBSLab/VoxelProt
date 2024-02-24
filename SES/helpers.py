@@ -100,4 +100,14 @@ def feathers2CSV(features,address,name):
     x_np=features.numpy()
     x_df = pd.DataFrame(x_np)
     x_df.to_csv(address+name+'.csv',index=False,header=False)     
+    
+def subsample(x, scale=1.0):
+    labels = pykeops.torch.cluster.grid_cluster(x, scale).long()
+    C = labels.max() + 1
+    x_1 = torch.cat((x, torch.ones_like(x[:, :1])), dim=1)
+    D = x_1.shape[1]
+    points = torch.zeros_like(x_1[:C])
+    points.scatter_add_(0, labels[:, None].repeat(1, D), x_1)
+           
+    return (points[:, :-1] / points[:, -1:]).contiguous()
 
