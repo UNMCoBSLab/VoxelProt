@@ -3,6 +3,7 @@ A. Dependency
 >pykeops<br>
 >numpy<br>
 >sklearn<br>
+>biopython<br>
 
 B. Preparation for proteins
 >1.Download the .pdb file locally<br>
