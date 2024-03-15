@@ -11,7 +11,10 @@ B. Preparation for proteins
 >3.Using APBS (https://server.poissonboltzmann.org/) to get the continuum electrostatics.<br>
 
 C.Protein surface generation and feature calculation.
->4.Run checkUnknownAA.py to check if there are any unknow AA.If yes, edit them into the dictionary.py.Else to the next step. <br>
+>4.Check if there are any unknow AA.If yes, edit them into the dictionary.py.Else to the next step. <br>
+chmod u+x checkUnknownAA.sh<br>
+./ checkUnknownAA.sh codeOfPdb fileAddressOfThePDB<br>
+e.g. ./checkUnknownAA.sh 1a27 /home/pdb1a27.ent<br>
 >5.Run SESFeature2CSV.py to generate SES and assign features to each surface points<br>
 
 D.Creating Octree objects.
