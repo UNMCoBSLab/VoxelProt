@@ -15,7 +15,9 @@ C.Protein surface generation and feature calculation.
 chmod u+x checkUnknownAA.sh<br>
 ./ checkUnknownAA.sh codeOfPdb fileAddressOfThePDB<br>
 e.g. ./checkUnknownAA.sh 1a27 /home/pdb1a27.ent<br>
->5.Run SESFeature2CSV.py to generate SES and assign features to each surface points<br>
+>5.Generate the surface point cloud model and assign features to each surface points<br>
+./ feature2CSV.sh codeOfPdb fileAddressOfThePDB DxFileAddress addressToStoreFeatures<br>
+e.g. ./ feature2CSV.sh 1a27 /home/pdb1a27.ent /home/1a27.dx /home/features/<br>
 
 D.Creating Octree objects.
 >6.Run surface2boxes_SEScg2e.py to create and store Octree objects<br>
