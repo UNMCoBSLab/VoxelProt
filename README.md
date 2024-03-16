@@ -20,5 +20,7 @@ e.g. ./checkUnknownAA.sh 1a27 /home/pdb1a27.ent<br>
 e.g. ./ feature2CSV.sh 1a27 /home/pdb1a27.ent /home/1a27.dx /home/features/<br>
 
 D.Creating Octree objects.
->6.Run surface2boxes_SEScg2e.py to create and store Octree objects<br>
+>6.Create and store Octree objects<br>
+./surface2Octree.sh codeOfPdb fileAddressOfThePDB addressStoreFeatures addressToStorebindingSiteOctree addressToStoreNonbindingSiteOctree<br>
+e.g. ./surface2Octree.sh 1a27 /home/pdb1a27.ent /home/features/ /home/bindingsite/ /home/nonbindingsite/<br>
 
