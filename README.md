@@ -24,3 +24,8 @@ D.Creating Octree objects.
 ./surface2Octree.sh codeOfPdb fileAddressOfThePDB addressStoreFeatures addressToStorebindingSiteOctree addressToStoreNonbindingSiteOctree<br>
 e.g. ./surface2Octree.sh 1a27 /home/pdb1a27.ent /home/features/ /home/bindingsite/ /home/nonbindingsite/<br>
 
+E.Training the model
+>7.train the model<br>
+./trainmodel.sh trainsetList(csv) directoryWhereBindingSiteOctreeAreStored directoryWhereNonBindingSiteOctreeAreStored directoryWhereTrainedModelWillBeStored numOfEpoches<br>
+e.g. ./trainmodel.sh /home/proteinlist.csv /home/bindingsite/ /home/nonbindingsite/ /home/VoxelProt/ 2<br>
+
