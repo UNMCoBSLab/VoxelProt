@@ -29,3 +29,8 @@ E.Training the model
 ./trainmodel.sh trainsetList(csv) directoryWhereBindingSiteOctreeAreStored directoryWhereNonBindingSiteOctreeAreStored directoryWhereTrainedModelWillBeStored numOfEpoches<br>
 e.g. ./trainmodel.sh /home/proteinlist.csv /home/bindingsite/ /home/nonbindingsite/ /home/VoxelProt/voxelProtmodel 2<br>
 
+
+F.Detection cofactor-binding site
+>7.detect the cofactor-binding site using the well-trained model in E<br>
+./detection.sh codeOfPdb fileAddressOfThePDB fileAddressOfTheTrainedModel addressToStoreFeatures outputname<br>
+e.g. ./detection.sh 4p68 /home/pdb4p68.ent "model.pth" /home/features/ /home/bindingsite4p68.csv'<br>
