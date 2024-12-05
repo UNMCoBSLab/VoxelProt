@@ -33,4 +33,4 @@ e.g. bash trainmodel.sh /../example_protein_list.csv /.../bindingsite/ /.../nonb
 F.Detection cofactor-binding site
 >7.detect the cofactor-binding site using the well-trained model in E<br>
 ./detection.sh codeOfPdb fileAddressOfThePDB fileAddressOfTheTrainedModel addressToStoreFeatures outputname<br>
-e.g. bash detection.sh 4p68 /home/pdb4p68.ent "model.pth" /home/features/ /home/bindingsite4p68.csv'<br>
+e.g. bash detection.sh 1a27 /../pdb1a27.ent /../voxelProtmodel1.pth /../features/ /../bindingsite1a27.csv'<br>
