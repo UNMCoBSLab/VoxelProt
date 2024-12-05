@@ -1,6 +1,6 @@
 #!/bin/bash
 #change to the directory
-cd VoxelProt/3.trainModel/
+cd ../3.trainModel/
 echo the first argument is a list of proteins
 echo the second argument is the directory where binding site Octrees are stored
 echo the third argument is the directory where non-binding site Octrees are stored
