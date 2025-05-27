@@ -1,8 +1,9 @@
-# LIGYSIS Human Binding Sites — April 2024
+# Dataset Descriptions
+## LIGYSIS Human Binding Sites — April 2024
 
 `LIGYSIS_human_sites_APRIL_2024.pkl` is part of the **LIGYSIS** resource, which provides curated annotations of protein–ligand binding sites across the **human proteome**. 
 
-## Description
+### Description
 
 | Column      | Description                                                                 |
 |-------------|-----------------------------------------------------------------------------|
@@ -15,7 +16,7 @@
 | `SITE_NAME` | Globally unique name for the site, formatted as `{SEG_ID}_{ID}` (e.g., `P12345_1_0`) |
 
 
-## Example
+### Example
 
 ```python
 import pickle
