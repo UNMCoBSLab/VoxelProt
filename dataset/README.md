@@ -1,4 +1,7 @@
 # Dataset Descriptions
+## 27 cofactors in the CoFactor database
+
+
 ## LIGYSIS Human Binding Sites — April 2024
 
 It is part of the **LIGYSIS** resource, which provides curated annotations of protein–ligand binding sites across the **human proteome**. 
@@ -26,6 +29,8 @@ It is part of the **LIGYSIS** resource, which provides curated annotations of pr
 This entry describes a ligand-binding site located on the first segment (`SEG = 1`) of protein `P41182`, and it is the first site (`ID = 0`) in that segment. The binding site spans **33 UniProt residues**, and it is uniquely identified across datasets using the key `P41182_1_0`.
 
 You can use this `SITE_NAME` to look up matching ligands or 3D structures in other associated LIGYSIS datasets ('LIGYSIS_human_chains_per_lig_MAY_2024.pkl').
+
+
 
 ## LIGYSIS_human_chains_per_lig_MAY_2024
 It is part of the **LIGYSIS** resource and provides mappings between human protein segments and **ligand-bound structural binding sites**. 
