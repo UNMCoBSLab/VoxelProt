@@ -1,6 +1,37 @@
 # Dataset Descriptions
 ## 27 cofactors in the CoFactor database[1]
 
+| #  | Cofactor (Name + Abbreviation)                     | PDB Ligand ID |
+|----|----------------------------------------------------|----------------|
+| 1  | Ascorbate (Ascorbic acid)                          | ASC            |
+| 2  | Adenosyl-cobalamin (Vitamin B12)                   | ADO, CBL       |
+| 3  | Biopterin                                           | BPT            |
+| 4  | Biotin                                              | BTN            |
+| 5  | Coenzyme A (CoA)                                    | COA            |
+| 6  | Coenzyme B (CoB)                                    | COB            |
+| 7  | Coenzyme M (CoM)                                    | COM            |
+| 8  | Coenzyme Q (Ubiquinone, CoQ)                        | UQ1, UQ2, UQ9   |
+| 9  | Dipyrro-methane                                     | Not assigned   |
+| 10 | Factor 430 (Cofactor F430)                          | F43            |
+| 11 | Flavin adenosine diphosphate (FAD)                 | FAD            |
+| 12 | Flavin mono-nucleotide (FMN)                        | FMN            |
+| 13 | Glutathione                                         | GSH            |
+| 14 | Heme                                                | HEM            |
+| 15 | Lipoic acid                                         | LPA, LIO       |
+| 16 | MIO (4-methyldieneimidazole-5-one)                  | MIO            |
+| 17 | Molybdenum cofactor (Molybdopterin, MoCo)           | MPT, MOO       |
+| 18 | Nucleotidylated MoCo (R = GMP or CMP)               | GTP/CMP-MPT    |
+| 19 | Menaquinone (Vitamin K2)                            | MQN, MEN       |
+| 20 | Nicotinamide adenine dinucleotide (NAD, NADP)       | NAD, NAP       |
+| 21 | Pyridoxal-phosphate (PLP)                           | PLP            |
+| 22 | Phosphopantetheine                                   | PPN, PPT       |
+| 23 | Pyrroloquinoline quinone (PQQ)                      | PQQ            |
+| 24 | S-adenosyl-methionine (SAM, AdoMet)                 | SAM            |
+| 25 | Thiamine diphosphate (ThDP, TDP)                    | TPP, THD       |
+| 26 | Tetrahydrofolic acid (Folic acid, Folate)           | FOL, THG       |
+| 27 | Topaquinone (TPQ)                                   | TPQ            |
+|    | Ortho-quinones (TTQ, LTQ, CTQ)                      | TTQ, CTQ, LTQ  |
+
 
 ## LIGYSIS Human Binding Sites — April 2024[2]
 
