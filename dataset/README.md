@@ -1,8 +1,8 @@
 # Dataset Descriptions
-## 27 cofactors in the CoFactor database
+## 27 cofactors in the CoFactor database[1]
 
 
-## LIGYSIS Human Binding Sites — April 2024
+## LIGYSIS Human Binding Sites — April 2024[2]
 
 It is part of the **LIGYSIS** resource, which provides curated annotations of protein–ligand binding sites across the **human proteome**. 
 
@@ -32,7 +32,7 @@ You can use this `SITE_NAME` to look up matching ligands or 3D structures in oth
 
 
 
-## LIGYSIS_human_chains_per_lig_MAY_2024
+## LIGYSIS_human_chains_per_lig_MAY_2024[2]
 It is part of the **LIGYSIS** resource and provides mappings between human protein segments and **ligand-bound structural binding sites**. 
 ### Description
 
@@ -76,4 +76,5 @@ It is part of the **LIGYSIS** resource and provides mappings between human prote
 | 3    | 7pvn_CA_J_1108      | Calcium ion in 7pvn, Chain J, Residue 1108     | A                   |
 
 ### Ref:
-[1]J. Sánchez Utgés, 《LBS-Comparison results》. Zenodo, 1月 21, 2025. doi: 10.5281/zenodo.14645504.
+[1] Fischer, J. D., Holliday, G. L., & Thornton, J. M. (2010). The CoFactor database: organic cofactors in enzyme catalysis. Bioinformatics, 26(19), 2496-2497.
+[2] J. Sánchez Utgés, 《LBS-Comparison results》. Zenodo, 1月 21, 2025. doi: 10.5281/zenodo.14645504.
