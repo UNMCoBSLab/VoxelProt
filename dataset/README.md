@@ -26,3 +26,7 @@ with open("LIGYSIS_human_sites_APRIL_2024.pkl", "rb") as f:
     df = pickle.load(f)
 
 print(df.head())
+
+
+### Ref:
+[1]J. Sánchez Utgés, 《LBS-Comparison results》. Zenodo, 1月 21, 2025. doi: 10.5281/zenodo.14645504.
