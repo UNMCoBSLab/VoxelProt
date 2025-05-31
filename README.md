@@ -4,11 +4,12 @@ A. Dependency
 >numpy<br>
 >sklearn<br>
 >biopython<br>
+>Reduce for adding and correcting hydrogens in PDB files(https://github.com/rlabduke/reduce)<br>
+>Using APBS (https://server.poissonboltzmann.org/) to get the continuum electrostatics.<br>
 
 B. Preparation for proteins
->1.Download the .pdb file locally<br>
->2.Using Reduce (https://github.com/rlabduke/reduce) for adding and correcting hydrogens in PDB files<br>
->3.Using APBS (https://server.poissonboltzmann.org/) to get the continuum electrostatics.<br>
+>1.Run ../dataset/preprocess.py<br>
+
 
 C.Protein surface generation and feature calculation.
 >4.Check if there are any unknow AA.If yes, edit them into the dictionary.py.Else to the next step. <br>
