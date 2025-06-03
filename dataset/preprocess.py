@@ -7,7 +7,7 @@ download_pdbs(pdb_ids,download_dir)
 #3. reduce software
 reduce(download_dir)
 #4.extract selected chains
-output_pdb_contain_selected_chain("/home/jingbo/pdbdownload/filtered_chains_biopy/","/home/jingbo/pdbdownload/withH/")
+output_pdb_contain_selected_chain("/home/jingbo/pdbdownload/filtered_chains_with_ligand/","/home/jingbo/pdbdownload/withH/")
 #5. split it into protein and ligand
 split_prot_ligand("/home/jingbo/masif/filtered_chains_with_ligand")
 #6.run pdb2pqr

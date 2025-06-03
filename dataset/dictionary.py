@@ -326,7 +326,7 @@ acceptorAngleAtom["OG1"] = "CB"
 # this is the van der walls distances
 distVDW=dict()
 a=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
-b=[170,120,152,155,180,190,180,175,198,227,275,173,139,231,244,100]
+b=[170,120,152,155,180,190,180,175,198,227,275,173,139,231,194,100]
 for each in range(16):
     distVDW[a[each]]=b[each]/100
 

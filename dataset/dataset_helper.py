@@ -135,13 +135,18 @@ def output_pdb_contain_selected_chain(dst_dir,src_dir):
     
             # load structure
             struct = parser.get_structure(pdb_id, infile)
-            io.set_structure(struct)
+            models = list(struct)
+            for m in models[1:]:  # skip the very first model
+                struct.detach_child(m.id)
+                
+            
     
             # build Select that keeps exactly the chains listed
             chains_to_keep = list(chain_str)   
             selector = KeepChainsNoWater(chains_to_keep)
     
             # write out
+            io.set_structure(struct)
             outfile = os.path.join(dst_dir, f"{pdb_id}_{chain_str}.pdb")
             io.save(outfile, select=selector)
             
