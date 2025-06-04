@@ -16,7 +16,7 @@ from tqdm import tqdm
 from itertools import islice
 
 def SESGeneration(pdb_address,feature_address,dx_address,slice_index):
-    pdb_list = csv_file = os.path.join(os.getcwd(), "VoxelProt", "dataset", "pdb_list_experiments.csv")
+    pdb_list = os.path.join(os.getcwd(), "VoxelProt", "dataset", "pdb_list_experiments.csv")
     dict_data={}
     with open(pdb_list, mode ='r')as file:
         csvFile = csv.reader(file)
