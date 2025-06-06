@@ -4,6 +4,7 @@ A. Dependency
 >numpy<br>
 >sklearn<br>
 >biopython<br>
+>tqmd
 >Reduce for adding and correcting hydrogens in PDB files(https://github.com/rlabduke/reduce)<br>
 >Using APBS (https://server.poissonboltzmann.org/) to get the continuum electrostatics.<br>
 >MDAnalysis (https://www.mdanalysis.org/GridDataFormats/gridData/overview.html).<br>
