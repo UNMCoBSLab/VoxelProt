@@ -17,9 +17,8 @@ C.Protein surface generation and feature calculation.
 >2.Run ../surfaceGeneration/SASGeneration_runner.py<br>
 
 D.Creating Octree objects.
->6.Create and store Octree objects<br>
-./surface2Octree.sh codeOfPdb fileAddressOfThePDB addressStoreFeatures addressToStorebindingSiteOctree addressToStoreNonbindingSiteOctree<br>
-e.g. bash surface2Octree.sh 1a27 /../pdb1a27.ent /../features/ /../bindingsite/ /../nonbindingsite/<br>
+>3.Run ../surface2Octree/octree_generation_runner.py<br>
+
 
 E.Training the model
 >7.train the model<br>
