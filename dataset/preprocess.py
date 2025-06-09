@@ -16,3 +16,5 @@ run_pdb2pqr("/home/jingbo/masif/split_proteins","/home/jingbo/masif/pqrs" )
 run_apbs("/home/jingbo/masif/pqrs" , "/home/jingbo/masif/dx_outputs")
 #8. check_unknown_AA
 check_unknown_AA("/home/jingbo/masif/split_proteins/")
+#9. cross valiation
+create_cross_val_splits(5)

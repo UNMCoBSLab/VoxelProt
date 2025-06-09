@@ -115,7 +115,7 @@ def reduce(download_dir):
 
 
 def output_pdb_contain_selected_chain(dst_dir,src_dir):
-    csv_file = os.path.join(os.getcwd(), "VoxelProt", "dataset", "pdb_list.csv")
+    csv_file = os.path.join(os.getcwd(), "VoxelProt", "dataset", "pdb_list_experiments.csv")
     os.makedirs(dst_dir, exist_ok=True)
 
     parser = PDBParser(QUIET=True)
@@ -201,3 +201,45 @@ def run_apbs(in_dir, out_dir):
     print('done')
     print(f'mkdir -p {out_dir}/')
     print(f'mv {in_dir}/*.dx {out_dir}/')
+    
+import os
+import random
+from typing import List
+
+def create_cross_val_splits(n_folds):
+    """
+    creates `n_folds` cross-validation splits with train/val/test files.
+    """
+    
+    # Load IDs
+    id_file = os.path.join(os.getcwd(), "VoxelProt", "dataset", "pdb_list_experiments.csv")
+    output_dir = os.path.join(os.getcwd(), "VoxelProt", "dataset", "cross_val_splits")
+    with open(id_file, 'r') as f:
+        ids = [line.strip() for line in f if line.strip()]
+
+    # Shuffle
+    random.seed(666)
+    random.shuffle(ids)
+
+    # Split into folds
+    total = len(ids)
+    fold_size = total // n_folds
+    folds: List[List[str]] = []
+    for i in range(n_folds):
+        start = i * fold_size
+        end = (i + 1) * fold_size if i < n_folds - 1 else total
+        folds.append(ids[start:end])
+
+    # create directories and write files
+    for i in range(n_folds):
+        test_ids = folds[i]
+        val_ids  = folds[(i + 1) % n_folds]
+        train_ids = [ x for j, fold in enumerate(folds) if j not in (i, (i + 1) % n_folds) for x in fold]
+
+        fold_dir = os.path.join(output_dir, f'fold_{i+1}')
+        os.makedirs(fold_dir, exist_ok=True)
+
+        for split_name, split_ids in (('train', train_ids), ('val', val_ids), ('test', test_ids)):
+            file_path = os.path.join(fold_dir, f'{split_name}.txt')
+            with open(file_path, 'w') as outf:
+                outf.write('\n'.join(split_ids) + '\n')
