@@ -21,9 +21,7 @@ D.Creating Octree objects.
 
 
 E.Training the model
->7.train the model<br>
-./trainmodel.sh trainsetList(csv) directoryWhereBindingSiteOctreeAreStored directoryWhereNonBindingSiteOctreeAreStored directoryWhereTrainedModelWillBeStored numOfEpoches<br>
-e.g. bash trainmodel.sh /../example_protein_list.csv /.../bindingsite/ /.../nonbindingsite/ /.../VoxelProt/voxelProtmodel 2<br>
+>4.Run ../trainModel/train_model_runner.py<br>
 
 
 F.Detection cofactor-binding site
