@@ -28,3 +28,6 @@ F.Detection cofactor-binding site
 >7.detect the cofactor-binding site using the well-trained model in E<br>
 ./detection.sh codeOfPdb fileAddressOfThePDB fileAddressOfTheTrainedModel addressToStoreFeatures outputname<br>
 e.g. bash detection.sh 1a27 /../pdb1a27.ent /../voxelProtmodel1.pth /../features/ /../bindingsite1a27.csv'<br>
+
+G.Evaluation
+>6.run ../evaluation/get_true_binding_site_runner.py to get all true binding site and store them in .pdb<br>
