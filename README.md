@@ -35,8 +35,14 @@ G.Evaluation
 F.fpocket
 >1. install fpocket
 >2. for pdb in /path/split_proteins/*.pdb; do
-    echo "Processing $pdb"
     fpocket -f "$pdb"
     done
 >3. run ../evaluation/fpocket_runner.py to get the results of fpocket
+
+G.P2Rank
+>1. install P2Rank
+>2. for pdb in /path/split_proteins/*.pdb; do
+    /path/p2rank_2.5/prank predict -f "$pdb" -o /path/p2rank_output/
+    done 
+>3. run ../evaluation/prank_runner.py to get the results of prank
 
