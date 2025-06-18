@@ -31,3 +31,12 @@ e.g. bash detection.sh 1a27 /../pdb1a27.ent /../voxelProtmodel1.pth /../features
 
 G.Evaluation
 >6.run ../evaluation/get_true_binding_site_runner.py to get all true binding site and store them in .pdb<br>
+
+F.fpocket
+>1. install fpocket
+>2. for pdb in /path/split_proteins/*.pdb; do
+    echo "Processing $pdb"
+    fpocket -f "$pdb"
+    done
+>3. run ../evaluation/fpocket_runner.py to get the results of fpocket
+
