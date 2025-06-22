@@ -35,9 +35,9 @@ G.Evaluation
 
 F.fpocket
 >1. install fpocket
->2. for pdb in /path/split_proteins/*.pdb; do
-    fpocket -f "$pdb"
-    done
+>2. for pdb in /path/split_proteins/*.pdb; do<br>
+    fpocket -f "$pdb"<br>
+    done<br>
 >3. run ../evaluation/fpocket_runner.py to get the results of fpocket
 
 G.P2Rank
