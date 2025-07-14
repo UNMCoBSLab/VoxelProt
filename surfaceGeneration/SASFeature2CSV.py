@@ -11,12 +11,63 @@ from VoxelProt.surfaceGeneration.hydrogen_bond_potential import *
 from VoxelProt.surfaceGeneration.hydropathy_info import *
 from gridData import Grid
 from VoxelProt.surfaceGeneration.curvatures import *
-import csv
+import csv,os
 from tqdm import tqdm
 from itertools import islice
 
-def SESGeneration(pdb_address,feature_address,dx_address,slice_index):
-    pdb_list = os.path.join(os.getcwd(), "VoxelProt", "dataset", "pdb_list_experiments.csv")
+def SESGeneration_chen11(pdb_address,feature_address,dx_address,slice_index):
+    pdb_list = os.path.join(os.getcwd(), "VoxelProt", "dataset", "chen11-prt2lig.csv")
+    
+    first_col = []
+    with open(pdb_list, newline='') as f:
+        reader = csv.reader(f)
+        for row in reader:
+            if not row: 
+                continue
+            first_col.append(f"prot_{row[0]}")
+            
+    slice_pdb_list = first_col[slice_index[0]:slice_index[1]]    
+    for pdbId in tqdm(slice_pdb_list): 
+        SESfea2CSV(pdbId,f"{pdb_address}/{pdbId}",feature_address,f"{dx_address}/{pdbId[:-4]}.pqr.dx")
+        
+def SESGeneration_jointed(pdb_address,feature_address,dx_address,slice_index):
+    pdb_list = os.path.join(os.getcwd(), "VoxelProt", "dataset", "jointed-prt2lig.csv")
+    
+    first_col = []
+    with open(pdb_list, newline='') as f:
+        reader = csv.reader(f)
+        for row in reader:
+            if not row: 
+                continue
+            first_col.append(f"{row[0]}")
+       
+    slice_pdb_list = first_col[slice_index[0]:slice_index[1]]    
+    for pdbId in tqdm(slice_pdb_list): 
+        SESfea2CSV(pdbId,f"{pdb_address}/{pdbId}",feature_address,f"{dx_address}/{pdbId[:-4]}.pqr.dx")
+        
+def SESGeneration_coach420(pdb_address,feature_address,dx_address,slice_index):
+    pdb_list = os.path.join(os.getcwd(), "VoxelProt", "dataset", "coach420_all-prt2lig.csv")
+    
+    first_col = []
+    with open(pdb_list, newline='') as f:
+        reader = csv.reader(f)
+        for row in reader:
+            if not row: 
+                continue
+            first_col.append(f"{row[0]}")
+       
+    slice_pdb_list = first_col[slice_index[0]:slice_index[1]]    
+    for pdbId in tqdm(slice_pdb_list): 
+        SESfea2CSV(pdbId,f"{pdb_address}/{pdbId}",feature_address,f"{dx_address}/{pdbId[:-4]}.pqr.dx")
+        
+        
+def SESGeneration(pdb_address,feature_address,dx_address,slice_index,csv_type = "masif_data"):
+    if csv_type == "masif_data":
+        pdb_list = os.path.join(os.getcwd(), "VoxelProt", "dataset", "pdb_list_experiments.csv")
+    elif csv_type == "coach":
+        pdb_list = os.path.join(os.getcwd(), "VoxelProt", "dataset", "coach420_cofactor.csv")
+    elif csv_type == "chen":
+        pdb_list = os.path.join(os.getcwd(), "VoxelProt", "dataset", "chen_cofactor.csv")
     dict_data={}
     with open(pdb_list, mode ='r')as file:
         csvFile = csv.reader(file)
