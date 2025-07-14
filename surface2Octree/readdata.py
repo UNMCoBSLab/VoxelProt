@@ -1,6 +1,15 @@
 from csv import reader
 import csv
 import torch
+def readSurfacePts(addSurface):
+    data=[]
+    with open(addSurface, "r") as csvfile:
+        spamreader = reader(csvfile, delimiter=' ', quotechar='|')
+        for row in spamreader:
+            data.append([float(each) for each in row[0].split(",")])
+    surfacePoints=torch.Tensor(data)[:,0:3]
+    return surfacePoints
+    
 def readData(addSurface,addKD,addElec,addCandidates,addAtom):
     """Args:
     address: e.g. "/home/llab/Desktop/JBLab/task1/features/surfaceNormals/"+train_ADP_name[0]+".csv"
@@ -56,10 +65,4 @@ def readSI(addSI):
         for row in spamreader:
             data.append([float(each) for each in row[0].split(",")])
     return torch.Tensor(data)
-
-
-# In[ ]:
-
-
-
 

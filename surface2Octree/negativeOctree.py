@@ -7,23 +7,39 @@ from VoxelProt.surface2Octree.dictionary import *
 from VoxelProt.surface2Octree.readdata import *
 from VoxelProt.surface2Octree.pickleoctree import *
 from VoxelProt.surface2Octree.helpers import *
-from VoxelProt.surface2Octree.VDW2Points import VDWPoints
-from VoxelProt.surface2Octree.VDW2Octree import VDWOctree
+#from VoxelProt.surface2Octree.VDW2Points import VDWPoints
+#from VoxelProt.surface2Octree.VDW2Octree import VDWOctree
 from VoxelProt.surface2Octree.points_SAS import Points
 from VoxelProt.surface2Octree.octree import Octree
 
-def surface2negativeOctree(pdbId,chain,threshold,pdbAddress,ligAddress,numberSelectCandidates,addSurface,addKD,addElec,addCandidates,addAtom,octreeadd_cg,octreeadd_v,device):
+def surface2negativeOctree(pdbId,threshold,pdbAddress,ligAddress,numberSelectCandidates,addSurface,addKD,addElec,addCandidates,addAtom,octreeadd_cg,octreeadd_v=None,device="cuda",data_type = "masif_data"):
+    # get protein atoms    
     # get protein atoms    
     struc_dict_p = PDBParser(QUIET=True).get_structure("protein",pdbAddress)
     atoms_p = Selection.unfold_entities(struc_dict_p, "A") 
-    protein_atoms=[item for item in atoms_p if item.get_parent().get_resname() in k]
+    if data_type == "masif_data":
+        protein_atoms=[item for item in atoms_p if item.get_parent().get_resname() in k]
+    elif data_type == "chen11" or data_type == "joined":
+        protein_atoms=[item for item in atoms_p]
     
-    # get ligand atoms        
-    struc_dict_l = PDBParser(QUIET=True).get_structure("ligand",ligAddress)
-    atoms_l = Selection.unfold_entities(struc_dict_l, "A")   
-    cofactor_atoms=[item for item in atoms_l if item.get_parent().get_resname() in COFACTOR]
-    all_cofactor = list(set([item.get_parent().get_resname() for item in cofactor_atoms]))
-    
+    # get ligand atoms   
+    if data_type == "masif_data": 
+        struc_dict_l = PDBParser(QUIET=True).get_structure("ligand",ligAddress)
+        atoms_l = Selection.unfold_entities(struc_dict_l, "A")   
+        cofactor_atoms=[item for item in atoms_l if item.get_parent().get_resname() in COFACTOR]
+        
+    elif data_type == "chen11" or data_type == "joined":
+        atoms_l = []
+        cofactor_atoms = []
+        for liga in ligAddress:
+            try:
+                struc_dict_l = PDBParser(QUIET=True).get_structure("ligand",liga)
+                atoms_l += Selection.unfold_entities(struc_dict_l, "A")   
+                cofactor_atoms += [item for item in atoms_l]
+            except:
+                pass
+                
+    all_cofactor = list(set([item.get_parent().id[1] for item in cofactor_atoms])) 
     #get the feature info 
     surfacePoints,oriented_nor_vector,KD_Hpotential,elec,atomtype,candidates= readData(addSurface,addKD,addElec,addCandidates,addAtom)      
 
@@ -34,8 +50,8 @@ def surface2negativeOctree(pdbId,chain,threshold,pdbAddress,ligAddress,numberSel
     
     
     for each in all_cofactor:
-        vars()["cofactor_atoms_"+each] =[a for a in cofactor_atoms if a.get_parent().get_resname() ==each] 
-        vars()["ns_"+each] =  Bio.PDB.NeighborSearch( (vars()["cofactor_atoms_"+each]) ) 
+        vars()["cofactor_atoms_"+str(each)] =[a for a in cofactor_atoms if a.get_parent().id[1] ==each] 
+        vars()["ns_"+str(each)] =  Bio.PDB.NeighborSearch( (vars()["cofactor_atoms_"+str(each)]) ) 
             
 
     #----------------nonNAP binding site    
@@ -45,7 +61,7 @@ def surface2negativeOctree(pdbId,chain,threshold,pdbAddress,ligAddress,numberSel
     for ind in range(len(candidates)):
         add=True
         for each in all_cofactor: 
-            if len((vars()["ns_"+each]).search(candidates[ind], threshold*2))!=0:
+            if len((vars()["ns_"+str(each)]).search(candidates[ind], threshold*2))!=0:
                 add=False
                 break
         if add:
@@ -65,7 +81,7 @@ def surface2negativeOctree(pdbId,chain,threshold,pdbAddress,ligAddress,numberSel
     for p in surfacePoints: 
         ifadd=True
         for each in all_cofactor:
-            if len( (vars()["ns_"+each]).search(p, 4) )!=0:
+            if len( (vars()["ns_"+str(each)]).search(p, 4) )!=0:
                 ifadd=False
                 break
         if ifadd:           
@@ -91,11 +107,11 @@ def surface2negativeOctree(pdbId,chain,threshold,pdbAddress,ligAddress,numberSel
             chem_geo_octree.build_neigh()
             saveOctree(chem_geo_octree,octreeadd_cg+pdbId+str(n)+str(ind)+"0.pkl")          
 
-            vdw_clouds=VDWPoints(protein_atoms,atoms_tree,N[n][ind],device,length=16)
-            vdw_octree=VDWOctree(depth=4,device = device)
-            vdw_octree.build_octree(vdw_clouds)
-            vdw_octree.build_neigh()
-            saveOctree(vdw_octree,octreeadd_v+pdbId+str(n)+str(ind)+"0.pkl")                
+            #vdw_clouds=VDWPoints(protein_atoms,atoms_tree,N[n][ind],device,length=16)
+            #vdw_octree=VDWOctree(depth=4,device = device)
+            #vdw_octree.build_octree(vdw_clouds)
+            #vdw_octree.build_neigh()
+            #saveOctree(vdw_octree,octreeadd_v+pdbId+str(n)+str(ind)+"0.pkl")                
 
             for i in range(0,3):
                 chem_geo_clouds.rotate(90,"x")
@@ -104,15 +120,15 @@ def surface2negativeOctree(pdbId,chain,threshold,pdbAddress,ligAddress,numberSel
                 chem_geo_octree.build_neigh()
                 saveOctree(chem_geo_octree,octreeadd_cg+pdbId+str(n)+str(ind)+str(i+1)+".pkl")
 
-                vdw_clouds.rotate(90,"x")
-                vdw_octree=VDWOctree(depth=4,device = device)
-                vdw_octree.build_octree(vdw_clouds)
-                vdw_octree.build_neigh()
-                saveOctree(vdw_octree, octreeadd_v+pdbId+str(n)+str(ind)+str(i+1)+".pkl")
+                #vdw_clouds.rotate(90,"x")
+                #vdw_octree=VDWOctree(depth=4,device = device)
+                #vdw_octree.build_octree(vdw_clouds)
+                #vdw_octree.build_neigh()
+                #saveOctree(vdw_octree, octreeadd_v+pdbId+str(n)+str(ind)+str(i+1)+".pkl")
 
 
             chem_geo_clouds.rotate(90,"x")
-            vdw_clouds.rotate(90,"x")                                                                                                                                 
+            #vdw_clouds.rotate(90,"x")                                                                                                                                 
 
             for i in range(0,3):
                 chem_geo_clouds.rotate(90,"y")
@@ -121,14 +137,14 @@ def surface2negativeOctree(pdbId,chain,threshold,pdbAddress,ligAddress,numberSel
                 chem_geo_octree.build_neigh()
                 saveOctree(chem_geo_octree,octreeadd_cg+pdbId+str(n)+str(ind)+str(i+4)+".pkl")
 
-                vdw_clouds.rotate(90,"y")
-                vdw_octree=VDWOctree(depth=4,device = device)
-                vdw_octree.build_octree(vdw_clouds)
-                vdw_octree.build_neigh()
-                saveOctree(vdw_octree,octreeadd_v+pdbId+str(n)+str(ind)+str(i+4)+".pkl")
+                #vdw_clouds.rotate(90,"y")
+                #vdw_octree=VDWOctree(depth=4,device = device)
+                #vdw_octree.build_octree(vdw_clouds)
+                #vdw_octree.build_neigh()
+                #saveOctree(vdw_octree,octreeadd_v+pdbId+str(n)+str(ind)+str(i+4)+".pkl")
 
             chem_geo_clouds.rotate(90,"y")
-            vdw_clouds.rotate(90,"y")             
+            #vdw_clouds.rotate(90,"y")             
 
             for i in range(0,3):
                 chem_geo_clouds.rotate(90,"z")
@@ -138,9 +154,9 @@ def surface2negativeOctree(pdbId,chain,threshold,pdbAddress,ligAddress,numberSel
                 saveOctree(chem_geo_octree,octreeadd_cg+pdbId+str(n)+str(ind)+str(i+7)+".pkl")       
 
 
-                vdw_clouds.rotate(90,"z")
-                vdw_octree=VDWOctree(depth=4,device = device)
-                vdw_octree.build_octree(vdw_clouds)
-                vdw_octree.build_neigh()
-                saveOctree(vdw_octree,octreeadd_v+pdbId+str(n)+str(ind)+str(i+7)+".pkl")                         
+                #vdw_clouds.rotate(90,"z")
+                #vdw_octree=VDWOctree(depth=4,device = device)
+                #vdw_octree.build_octree(vdw_clouds)
+                #vdw_octree.build_neigh()
+                #saveOctree(vdw_octree,octreeadd_v+pdbId+str(n)+str(ind)+str(i+7)+".pkl")                         
 

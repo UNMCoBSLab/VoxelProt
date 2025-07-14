@@ -8,6 +8,9 @@ COA-101
 NAD-92
 NAP-81
 """
+EXCLUDED_COFACTOERS = ["ACO","ACP","ANP","AMP","ATP","CAA","CDP","CMP",
+"FMN","GDP","GMP","GNP","NAI","H4B","GTP","NDP","SCA","TPP","UMP"]
+
 
 EXCLUDED_LIGANDS = ['CMX','TXE','01K','9LF','A2R','UJJ','3OD','F5D','5ZV','WC8','52O','KWM','KXG','OXT','5FA','NHW','WCA','ZD4','HCO',
 'CA8','NDX','OXK','CCH','TUY','1OF','AQH','5TW','0T1','NDW','MC0','HFQ','HQG','BY3','BCO','MD9','NAX','BA7','HFM','UTA',
@@ -76,7 +79,7 @@ v=[4.5, 2.8, 4.2, 3.8, -0.9,
 for i in range(len(v)):
     Kyte_Doolittle[k[i]]=v[i]
 
-NON_POLYMER=["UMA",'FDA', '2CL', 'ZIR', 'PO4', 'TCC', 'GFB', 'N22', 'FAD', 'GDU', 'I84', 'HEM',
+NON_POLYMER=["MEN","LCX","ASI","UMA",'FDA', '2CL', 'ZIR', 'PO4', 'TCC', 'GFB', 'N22', 'FAD', 'GDU', 'I84', 'HEM',
  '1SM', 'Q24', 'N2P', 'H2S', 'O8A', 'JPN', '5WB', 'GOL', 'D64', '0SZ', '22Y', '0T0', 'DMS',
  'M49', 'QUE', 'D16', 'LPA', '51P', 'IUR', '79X', 'FLR', 'XCF', 'IDH', '641', 'NA0', 'UFP',
  'AOX', 'C2F', 'GUN', 'CO8', '15M', '0U6', 'STR', 'HMG', 'IOD', 'PG5', 'M42', '25U', 'VRO',
@@ -325,7 +328,6 @@ acceptorAngleAtom["OG"] = "CB"
 acceptorAngleAtom["OG1"] = "CB"
 # this is the van der walls distances
 distVDW=dict()
-#[C, H, O, N, S, Se, P, Cl, IOD, Na, K, MG, ZN, CA, FE, others]
 a=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
 b=[170,120,152,155,180,190,180,175,198,227,275,173,139,231,194,100]
 for each in range(16):
