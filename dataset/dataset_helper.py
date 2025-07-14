@@ -80,12 +80,17 @@ def split_prot_ligand(src_dir):
         else:
             print(f"No ligands in {fname}, skipping ligand output.")
             
-def get_protein_id():
+def get_protein_id(csv_file = "masif_data"):
     ids = []
-    file_dir = os.path.join(os.getcwd(), "VoxelProt", "dataset", "pdb_list_experiments.csv")
+    if csv_file == "masif_data":
+        file_dir = os.path.join(os.getcwd(), "VoxelProt", "dataset", "pdb_list_experiments.csv")
+    elif csv_file == "coach_cofactor":
+        file_dir = os.path.join(os.getcwd(), "VoxelProt", "dataset", "coach420_cofactor.csv")
+    elif csv_file == "chen_cofactor":
+        file_dir = os.path.join(os.getcwd(), "VoxelProt", "dataset", "chen_cofactor.csv")
+        
     with open(file_dir, newline='') as f:
-        reader = csv.reader(f)
-        header = next(reader)            
+        reader = csv.reader(f)     
         for row in reader:
             full = row[0]               
             code, _ = full.split('_', 1) 
@@ -114,8 +119,13 @@ def reduce(download_dir):
     print("done")
 
 
-def output_pdb_contain_selected_chain(dst_dir,src_dir):
-    csv_file = os.path.join(os.getcwd(), "VoxelProt", "dataset", "pdb_list_experiments.csv")
+def output_pdb_contain_selected_chain(dst_dir,src_dir,csv_type = "masif_data"):
+    if csv_type == "masif_data":
+        csv_file = os.path.join(os.getcwd(), "VoxelProt", "dataset", "pdb_list_experiments.csv")
+    elif csv_type == "coach":
+        csv_file = os.path.join(os.getcwd(), "VoxelProt", "dataset", "coach420_cofactor.csv")
+    elif csv_type == "chen":
+        csv_file = os.path.join(os.getcwd(), "VoxelProt", "dataset", "chen_cofactor.csv")
     os.makedirs(dst_dir, exist_ok=True)
 
     parser = PDBParser(QUIET=True)
