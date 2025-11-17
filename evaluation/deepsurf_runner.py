@@ -58,21 +58,22 @@ def deepsurf_eval(n_fold, deepsurf_output, true_ligand_pdb_path,true_binding_sit
         dca_rv = np.concatenate([dca_rv, dca_np])
 
     return dvo_rv, dcc_rv, dca_rv
-deepsurf_output = '/media/jingbo/HD1_8TB/voxelprot_cofactor/coach420/results/deepsurf/deepsurf_outputs/'
-true_ligand_pdb_path = "/media/jingbo/HD1_8TB/voxelprot_cofactor/coach420/split_ligands_single(excluded)/"
-true_binding_site_pdb_path = "/media/jingbo/HD1_8TB/voxelprot_cofactor/coach420/true_binding_site(excluded)/"
-csv_type = "coach420_excluded"  #masif_data or coach_cofactor or chen_cofactor or coach420_all or coach420_excluded,HOLO4K_all,HOLO4K_excluded
-n_fold = 0
-
-for extra_top in [0,2]:
-    dvo_rv, dcc_rv, dca_rv = deepsurf_eval(n_fold,deepsurf_output, true_ligand_pdb_path, true_binding_site_pdb_path,extra_top,csv_type)
-    plot_dcc_curve(dcc_rv, f"{csv_type}_DCC (fold{n_fold},top (n + {extra_top}),deepsurf)",save_path = f"DCC_{csv_type}_deepsurf_top (n + {extra_top})_{n_fold}") 
-    plot_dcc_curve(dca_rv, f"{csv_type}_DCA (fold{n_fold},top (n + {extra_top}),deepsurf)",save_path = f"DCA_{csv_type}_deepsurf_top (n + {extra_top})_{n_fold}") 
-
+if __name__ == "__main__":
+    deepsurf_output = '/.../deepsurf_outputs/'
+    true_ligand_pdb_path = "/.../coach420/split_ligands_single(excluded)/"
+    true_binding_site_pdb_path = "/.../coach420/true_binding_site(excluded)/"
+    csv_type = "coach420_excluded"  #masif_data or coach_cofactor or chen_cofactor or coach420_all or coach420_excluded,HOLO4K_all,HOLO4K_excluded
+    n_fold = 0
     
-    mean,std = stat_dvo(dca_rv, dvo_rv, cutoff = 4)
+    for extra_top in [0,2]:
+        dvo_rv, dcc_rv, dca_rv = deepsurf_eval(n_fold,deepsurf_output, true_ligand_pdb_path, true_binding_site_pdb_path,extra_top,csv_type)
+        plot_dcc_curve(dcc_rv, f"{csv_type}_DCC (fold{n_fold},top (n + {extra_top}),deepsurf)",save_path = f"DCC_{csv_type}_deepsurf_top (n + {extra_top})_{n_fold}") 
+        plot_dcc_curve(dca_rv, f"{csv_type}_DCA (fold{n_fold},top (n + {extra_top}),deepsurf)",save_path = f"DCA_{csv_type}_deepsurf_top (n + {extra_top})_{n_fold}") 
     
-    print(f"fold{n_fold},extra_top{extra_top}: {mean} +/- {std}")
+        
+        mean,std = stat_dvo(dca_rv, dvo_rv, cutoff = 4)
+        
+        print(f"fold{n_fold},extra_top{extra_top}: {mean} +/- {std}")
     
     np.savetxt(f'dvo_fold{n_fold}_extraTop{extra_top}.csv', dvo_rv, delimiter=',')
     np.savetxt(f'dcc_fold{n_fold}_extraTop{extra_top}.csv', dcc_rv, delimiter=',')
