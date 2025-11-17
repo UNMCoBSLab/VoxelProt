@@ -80,6 +80,24 @@ def sample(atoms, distance=0.5,sup_sampling=40):
     sample_points = sample_points.view(-1, dim)  # (N*B, D)
     return sample_points
 
+
+
+def normalVector(points, atoms, smoothness=0.01):
+    """Computes a normal vector for each surface point, which points out always.
+    
+    Args:
+        points: (N,3) surfacePoints.
+        atoms: (M,3) protein atoms.
+    Returns:
+        Tensor: (N,3) normal vector for each surface point 
+    """   
+    p = points.detach()
+    p.requires_grad = True
+    dists = soft_distances(atoms,p,smoothness=smoothness)
+    Loss = (1.0 * dists).sum()
+    g = torch.autograd.grad(Loss, p)[0]
+    return F.normalize(g, p=2, dim=-1) 
+
 def soft_distances(x,y,smoothness=0.01):
     """Computes a soft distance function to the atom centers of a protein.
       
@@ -101,23 +119,7 @@ def soft_distances(x,y,smoothness=0.01):
     # Use a block-diagonal sparsity mask to support heterogeneous batch processing:
     #return -smoothness * ((-D_ij.sqrt() / smoothness).logsumexp(dim=0)).view(-1)
     return -smoothness * ((-D_ij.sqrt() / smoothness).logsumexp(dim=0)).view(-1)
-
-def normalVector(points, atoms, smoothness=0.01):
-    """Computes a normal vector for each surface point, which points out always.
     
-    Args:
-        points: (N,3) surfacePoints.
-        atoms: (M,3) protein atoms.
-    Returns:
-        Tensor: (N,3) normal vector for each surface point 
-    """   
-    p = points.detach()
-    p.requires_grad = True
-    dists = soft_distances(atoms,p,smoothness=smoothness)
-    Loss = (1.0 * dists).sum()
-    g = torch.autograd.grad(Loss, p)[0]
-    return F.normalize(g, p=2, dim=-1) 
-
 def gradDescent(protein_atoms_coor,samples,distance,smoothness=0.01,n_iter=4):
     with torch.enable_grad():
         if samples.is_leaf:
@@ -160,15 +162,9 @@ def createSurface(atomscoor,atomtypes_protein,batch=None,sup_sampling=5,smoothne
     # store the coor of each type of atoms in protein_atoms_coor0...15
     for each in range(16):
         vars()["atomscoor"+str(each)] =np.empty((0,3))
-    '''
-    #old one, sometimes got errors
+
     for each in range(len(atomtypes_protein)):
-        vars()["atomscoor"+str(atomtypes_protein[each])] = \
-                np.append(vars()["atomscoor"+str(atomtypes_protein[each])],\
-                           np.array([atomscoor[each]]), axis=0)
-    '''
-    for each in range(len(atomtypes_protein)):
-        vars()["atomscoor"+str(atomtypes_protein[each])] =                 np.append(vars()["atomscoor"+str(atomtypes_protein[each])],                           np.array(atomscoor[each].reshape(1,3)), axis=0)
+        vars()["atomscoor"+str(atomtypes_protein[each])] = np.append(vars()["atomscoor"+str(atomtypes_protein[each])],                           np.array(atomscoor[each].reshape(1,3)), axis=0)
         
     for each in range(16):
         vars()["protein_atoms_coor"+str(each)] = torch.from_numpy(vars()["atomscoor"+str(each)]).to(device=device)

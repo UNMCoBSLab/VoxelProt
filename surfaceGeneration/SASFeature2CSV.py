@@ -60,6 +60,21 @@ def SESGeneration_coach420(pdb_address,feature_address,dx_address,slice_index):
     for pdbId in tqdm(slice_pdb_list): 
         SESfea2CSV(pdbId,f"{pdb_address}/{pdbId}",feature_address,f"{dx_address}/{pdbId[:-4]}.pqr.dx")
         
+def SESGeneration_HOLO4K(pdb_address,feature_address,dx_address,slice_index):
+    pdb_list = os.path.join(os.getcwd(), "VoxelProt", "dataset", "HOLO4K-prot2lig.csv")
+    
+    first_col = []
+    with open(pdb_list, newline='') as f:
+        reader = csv.reader(f)
+        for row in reader:
+            if not row: 
+                continue
+            first_col.append(f"{row[0]}")
+       
+    slice_pdb_list = first_col[slice_index[0]:slice_index[1]]    
+    for pdbId in tqdm(slice_pdb_list): 
+        SESfea2CSV(pdbId,f"{pdb_address}/{pdbId}",feature_address,f"{dx_address}/{pdbId[:-4]}.pqr.dx")
+        
         
 def SESGeneration(pdb_address,feature_address,dx_address,slice_index,csv_type = "masif_data"):
     if csv_type == "masif_data":
