@@ -1,3 +1,6 @@
+You can run a single test case using detection_example.py.
+
+To reproduce all experiments, follow the steps below in order.
 A. Dependency
 >torch<br>
 >pykeops<br>
@@ -32,16 +35,17 @@ G.Evaluation
 >7.run ../evaluation/voxelprot_runner.py to get all true binding site and store them in .pdb<br>
 
 F.fpocket
->1. install fpocket
->2. for pdb in /path/split_proteins/*.pdb; do<br>
-        fpocket -f "$pdb"<br>
-    done<br>
->3. run ../evaluation/fpocket_runner.py to get the results of fpocket
+>1. install and run fpocket
+>2. run ../evaluation/fpocket_runner.py to get the results of fpocket
 
 G.P2Rank
->1. install P2Rank
->2. for pdb in /path/split_proteins/*.pdb; do
-    ./p2rank_2.5/prank predict -f "$pdb" -o /path/p2rank_output/
-    done 
->3. run ../evaluation/prank_runner.py to get the results of prank
+>1. install and run P2Rank
+>2. run ../evaluation/prank_runner.py to get the results of P2Rank
 
+H.DeepSurf
+>1. install and run DeepSurf
+>2. run ../evaluation/deepsurf_runner.py to get the results of DeepSurf
+
+H.Kalasanty
+>1. install and install Kalasanty
+>2. run ../evaluation/kalasanty_runner.py to get the results of Kalasanty
