@@ -9,7 +9,7 @@ out_fn = "/.../voxelprot/results/voxelprot/voxelprot_output"
 
 #==========get model and test_list
 model = load_model("resnet",model_path,device)
-test_list = get_test_id(n_fold,"coach42_all")  # or chen_cofactor, coach42_all,coach42_excluded
+test_list = get_test_id(n_fold,"coach42_all")  # "HOLO4K", "coach420_all" or csv_type=="coach420_excluded"
 
 for protein_id in tqdm(test_list):
     print(protein_id)
