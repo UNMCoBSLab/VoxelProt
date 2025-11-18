@@ -1,4 +1,5 @@
-You can run a single test case using detection_example.py.
+**run a test case
+From the repository root, run: python -m example.detection_example to execute the example detection pipeline using the provided model and example protein features.
 
 To reproduce all experiments, follow the steps below in order.
 A. Dependency
