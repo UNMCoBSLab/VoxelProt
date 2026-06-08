@@ -16,29 +16,33 @@ def smooth_normals(vertices, normals, scales=[1.0], batch=None):
       scales([float]): the scale of the ball
       batch(tensor):batch operator 
     """
-    #change scales into tensor type
-    scales = torch.Tensor(scales).type_as(vertices)
+    scales = torch.as_tensor(scales,dtype=vertices.dtype,device=vertices.device)
 
-    #the centers of balls are all vertices
     centers = vertices
 
-    # Normal of a vertex:
-    x = LazyTensor(vertices[:, None, :])  
-    y = LazyTensor(centers[None, :, :])  
-    z = LazyTensor(normals[None, :, :])  
-    s = LazyTensor(scales[None, None, :])  
+    # KeOps symbolic tensors
+    x_i = LazyTensor(vertices[:, None, :])     # [N, 1, 3]
+    y_j = LazyTensor(centers[None, :, :])      # [1, N, 3]
+    n_j = LazyTensor(normals[None, :, :])      # [1, N, 3]
+    s = LazyTensor(scales[None, None, :])      # [1, 1, S]
 
-    D_ij = ((x - y) ** 2).sum(-1)  
-    K_ij = (-D_ij / (2 * s ** 2)).exp()  
+    # Squared Euclidean distances
+    D_ij = ((x_i - y_j) ** 2).sum(-1)          # [N, N, 1]
+
+    # Gaussian kernel for each scale
+    K_ij = (-D_ij / (2 * s ** 2)).exp()        # [N, N, S]
 
     if batch is not None:
-        K_ij.ranges = diagonal_ranges(batch,batch)
+        K_ij.ranges = diagonal_ranges(batch, batch)
 
-    normals = (K_ij.tensorprod(z)).sum(dim=1)  
-    normals = normals.view(-1, len(scales), 3)
-    normals = F.normalize(normals, p=2, dim=-1)  
-    
-    return normals
+    # Weighted sum of neighboring normals
+    smoothed = K_ij.tensorprod(n_j).sum(dim=1) # [N, S*3]
+    smoothed = smoothed.view(-1, len(scales), 3)
+
+    smoothed = F.normalize(smoothed, p=2, dim=-1)
+
+    return smoothed
+
 
 def tangent_vectors(normals):
     """This function is used to calculate the tangent plane
@@ -77,66 +81,75 @@ def curvatures(vertices, normals, scales=[1.0], batch=None, reg=0.01):
     # calculate the tangent plane of each point:
     tangents = tangent_vectors(smoothed_normals)  
 
+    x_i = LazyTensor(vertices.view(N, 1, 3))
+    x_j = LazyTensor(vertices.view(1, N, 3))
+    x_diff = x_j - x_i
+
     curvature = []
 
-    for ind, scale in enumerate(scales):
-        normals = smoothed_normals[:, ind, :].contiguous() 
-        uv = tangents[:, ind, :, :].contiguous() 
+    for scale_index, scale in enumerate(scales):
+        normals_scale = smoothed_normals[:, scale_index, :].contiguous()
+        uv = tangents[:, scale_index, :, :].contiguous()
 
-        # Encode as symbolic tensors:
-        # Points:
-        x_i = LazyTensor(vertices.view(N, 1, 3))
-        x_j = LazyTensor(vertices.view(1, N, 3))
-        # Normals:
-        n_i = LazyTensor(normals.view(N, 1, 3))
-        n_j = LazyTensor(normals.view(1, N, 3))
-        # Tangent bases:
+        n_i = LazyTensor(normals_scale.view(N, 1, 3))
+        n_j = LazyTensor(normals_scale.view(1, N, 3))
         uv_i = LazyTensor(uv.view(N, 1, 6))
 
-        # Pseudo-geodesic squared distance:
-        d2_ij = ((x_j - x_i) ** 2).sum(-1) * ((2 - (n_i | n_j)) ** 2)  
-        # Gaussian window:
-        window_ij = (-d2_ij / (2 * (scale ** 2))).exp()  
+        # Pseudo-geodesic squared distance
+        d2_ij = (x_diff ** 2).sum(-1) * ((2 - (n_i | n_j)) ** 2)
 
-        # Calculate the P and Q
-        P_ij = uv_i.matvecmult(x_j - x_i)  
-        Q_ij = uv_i.matvecmult(n_j - n_i) 
+        # Gaussian window
+        window_ij = (-d2_ij / (2 * (scale ** 2))).exp()
+
+        # Project coordinate and normal differences onto tangent basis
+        P_ij = uv_i.matvecmult(x_diff)
+        Q_ij = uv_i.matvecmult(n_j - n_i)
+
         # Concatenate P and Q
-        PQ_ij = P_ij.concat(Q_ij)  
+        PQ_ij = P_ij.concat(Q_ij)
 
-        # Covariances
-        PPt_PQt_ij = P_ij.tensorprod(PQ_ij)  
-        PPt_PQt_ij = window_ij * PPt_PQt_ij  
+        # Local covariance terms
+        PPt_PQt_ij = P_ij.tensorprod(PQ_ij)
+        PPt_PQt_ij = window_ij * PPt_PQt_ij
 
-        # Reduction - with batch support:
+        # Batch-aware reduction
         PPt_PQt_ij.ranges = ranges
-        PPt_PQt = PPt_PQt_ij.sum(1)  
+        PPt_PQt = PPt_PQt_ij.sum(1)
 
-        # Reshape to get the two covariance matrices:
+        # Reshape into two 2x2 matrices
         PPt_PQt = PPt_PQt.view(N, 2, 2, 2)
-        PPt, PQt = PPt_PQt[:, :, 0, :], PPt_PQt[:, :, 1, :] 
+        PPt = PPt_PQt[:, :, 0, :]
+        PQt = PPt_PQt[:, :, 1, :]
 
-        # Add a small ridge regression:
+        # Ridge regularization
         PPt[:, 0, 0] += reg
         PPt[:, 1, 1] += reg
 
+        # Solve local linear system
         S = torch.linalg.solve(PPt, PQt)
-        a, b, c, d = S[:, 0, 0], S[:, 0, 1], S[:, 1, 0], S[:, 1, 1]  
 
-        # mean curvature is the trace and gauss curvature is the determinant
+        a = S[:, 0, 0]
+        b = S[:, 0, 1]
+        c = S[:, 1, 0]
+        d = S[:, 1, 1]
+
         mean_curvature = a + d
         gauss_curvature = a * d - b * c
-        curvature += [mean_curvature.clamp(-1, 1), gauss_curvature.clamp(-1, 1)]
+
+        curvature.append(mean_curvature.clamp(-1, 1))
+        curvature.append(gauss_curvature.clamp(-1, 1))
 
     curvature = torch.stack(curvature, dim=-1)
-    
-    mean_curvature = curvature[:,0]
-    gauss_curvature = curvature[:,1]
-    elem = torch.square(mean_curvature) - gauss_curvature  
-    elem[elem<=0] = 1e-8
+
+    mean_curvature = curvature[:, 0]
+    gauss_curvature = curvature[:, 1]
+
+    elem = torch.square(mean_curvature) - gauss_curvature
+    elem[elem <= 0] = 1e-8
+
     k1 = mean_curvature + torch.sqrt(elem)
     k2 = mean_curvature - torch.sqrt(elem)
-  
-    # Compute the shape index 
-    shape_index = torch.arctan( (k1+k2)/(k1-k2) )*(2/torch.pi)
+
+    shape_index = torch.arctan((k1 + k2) / (k1 - k2)) * (2 / torch.pi)
+
     return shape_index
